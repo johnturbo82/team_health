@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <title>Umfrage Team Health</title>
+</head>
+<body>
+    <h1>Umfrage Team Health</h1>
+    {% if questions %}
+        <form method="post" action="/submit_survey">
+            <ul>
+                {% for question in questions %}
+                    <li>
+                        <label for="question_{{ question.id }}">{{ question.question }}</label>
+                        <input type="range" id="question_{{ question.id }}" name="question_{{ question.id }}" min="1" max="10" required >
+                    </li>
+                {% endfor %}
+            </ul>
+            <button type="submit">Submit</button>
+        </form>
+    {% else %}
+        <p>No questions found for this survey.</p>
+    {% endif %}
+</body>
+</html>

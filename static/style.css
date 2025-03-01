@@ -7,6 +7,10 @@ body {
     box-sizing: border-box;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+}
+
 form {
     margin-bottom: 20px;
 }
@@ -35,9 +39,10 @@ input[type="submit"]:hover {
 
 .container {
     width: 1000px;
-    margin: 10px auto;
+    margin: 10px auto 50px;
     background-color: #202020;
-    padding: 20px 40px;
+    padding: 30px;
+    border-radius: 10px;
 }
 
 .saved-values {
@@ -49,4 +54,9 @@ input[type="submit"]:hover {
 
 .saved-values p {
     margin: 5px 0;
+}
+
+p.user {
+    float: right;
+    margin-top: 40px;
 }

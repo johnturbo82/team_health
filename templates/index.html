@@ -1,34 +1,35 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
-    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
     <title>Team Health</title>
-  </head>
-  <body>
-    <div class="container">
-      <h1>Team Health</h1>
-      <p>Ein hoher Wert repräsentiert in jeder Frage etwas Positives.</p>
-      {% if not submitted %}
-      <form action="/" method="POST">
-        <label for="value">Wert:</label>
-        <input type="range" id="value" name="value" min="1" max="10" required />
-        <button type="submit">Hinzufügen</button>
-      </form>
-      {% else %}
-      <p>Sie haben das Formular bereits abgeschickt.</p>
-      {% endif %}
+</head>
 
-      <h2>Gespeicherte Werte:</h2>
-      <ul>
-        {% for item in entries %}
-        <li>{{ item }}</li>
-        {% endfor %}
-      </ul>
+<body>
+    <div class="container">
+        <h1>Team Health</h1>
+        <p>Ein hoher Wert repräsentiert in jeder Frage etwas Positives.</p>
+        {% if not submitted %}
+        <form action="/" method="POST">
+            <label for="value">Wert:</label>
+            <input type="range" id="value" name="value" min="1" max="10" required />
+            <button type="submit">Hinzufügen</button>
+        </form>
+        {% else %}
+        <p>Sie haben das Formular bereits abgeschickt.</p>
+        {% endif %}
+
+        <h2>Gespeicherte Werte:</h2>
+        <ul>
+            {% for item in entries %}
+            <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+        <p class="user">User ID: {{ user }}</p>
     </div>
-  </body>
+</body>
+
 </html>

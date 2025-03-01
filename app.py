@@ -1,39 +1,44 @@
 from flask import Flask, render_template, request, redirect, url_for, make_response
-import sqlite3
+import model
+import uuid
+import datetime
 
 app = Flask(__name__)
 
-def init_db():
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
-    c.execute('CREATE TABLE IF NOT EXISTS entries (id INTEGER PRIMARY KEY, value TEXT)')
-    conn.commit()
-    conn.close()
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        if request.cookies.get('submitted'):
-            return redirect(url_for('index'))
-        
+    user = ""
+    if not request.cookies.get('user'):
+        resp = make_response(redirect(url_for('index')))
+        expires_date = datetime.datetime.now() + datetime.timedelta(days=365)
+        user = str(uuid.uuid4())
+        resp.set_cookie('user', user, expires=expires_date)
+        return resp
+    else:
+        user = request.cookies.get('user')
+    
+    if request.method == 'POST':        
         value = request.form['value']
-        conn = sqlite3.connect('database.db')
-        c = conn.cursor()
-        c.execute('INSERT INTO entries (value) VALUES (?)', (value,))
-        conn.commit()
-        conn.close()
+        model.insert_entry(value, user)
         
         resp = make_response(redirect(url_for('index')))
         resp.set_cookie('submitted', 'true')
         return resp
     
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
-    c.execute('SELECT * FROM entries')
-    entries = c.fetchall()
-    conn.close()
-    return render_template('index.html', entries=entries, submitted=request.cookies.get('submitted'))
+    entries = model.get_entries()
+    return render_template('index.html', entries=entries, submitted=request.cookies.get('submitted'), user=user)
+
+@app.route('/survey', methods=['GET'])
+def survey():
+    survey_uuid = request.args.get('uuid')
+    if survey_uuid:
+        survey = model.get_survey_by_uuid(survey_uuid)
+        if survey:
+            question_ids = survey['questions'].split(',')
+            questions = model.get_questions_by_ids(question_ids)
+            return render_template('survey.html', questions=questions)
+    return "Survey not found", 404
 
 if __name__ == '__main__':
-    init_db()
+    model.init_db()
     app.run(debug=True)
