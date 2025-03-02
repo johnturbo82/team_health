@@ -81,6 +81,13 @@ def results():
             return render_template('results.html', questions=questions, answers=answers, weighted_answers=weighted_answers, average_answers=average_answers, survey_uuid=survey_uuid, user=user)
     return "Survey not found", 404
 
+@app.route('/delete_survey', methods=['POST'])
+def delete_survey():
+    survey_uuid = request.form.get('uuid')
+    if survey_uuid:
+        model.delete_survey(survey_uuid)
+    return redirect(url_for('index'))
+
 if __name__ == '__main__':
     model.init_db()
     app.run(debug=True)

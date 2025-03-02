@@ -114,3 +114,10 @@ def get_weighted_answers_by_survey_uuid(survey_uuid: str) -> dict:
             weighted_answers[question_id] = [0] * 10
         weighted_answers[question_id][value - 1] += 1
     return weighted_answers
+
+def delete_survey(survey_uuid: str) -> None:
+    with get_db_connection() as conn:
+        c = conn.cursor()
+        c.execute('DELETE FROM surveys WHERE uuid = ?', (survey_uuid,))
+        c.execute('DELETE FROM answers WHERE survey_id = ?', (survey_uuid,))
+        conn.commit()

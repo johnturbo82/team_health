@@ -41,6 +41,15 @@ input[type="submit"]:hover {
     background-color: #4cae4c;
 }
 
+button {
+    padding: 10px 15px;
+    background-color: #d8c5c4;
+    color: black;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -83,6 +92,7 @@ p.user {
     position: relative;
     min-height: 200px;
     padding: 10px 0;
+    border-bottom: 2px solid #ddd;
 }
 
 .question label, .question input {
@@ -106,11 +116,10 @@ p.user {
     right: 0;
 }
 
-button {
-    padding: 10px 15px;
-    background-color: #d8c5c4;
-    color: black;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
+.question .category {
+    margin-bottom: 0;
+}
+
+.question:last-of-type {
+    border-bottom: none;
 }
