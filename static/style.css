@@ -88,6 +88,11 @@ p.user {
     margin-top: 40px;
 }
 
+span.em {
+    font-weight: bold;
+    font-size: 19px;
+}
+
 .question {
     position: relative;
     min-height: 200px;

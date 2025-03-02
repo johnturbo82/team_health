@@ -33,7 +33,7 @@ def survey():
         if survey:
             question_ids = survey['questions'].split(',')
             questions = model.get_questions_by_ids(question_ids)
-            return render_template('survey.html', questions=questions, survey_uuid=survey_uuid, user=user)
+            return render_template('survey.html', questions=questions, survey_name=survey['name'], survey_uuid=survey_uuid, user=user)
     return "Survey not found", 404
 
 @app.route('/submit_survey', methods=['POST'])
@@ -57,10 +57,11 @@ def submit_survey():
 
 @app.route('/create_survey', methods=['POST'])
 def create_survey():
+    survey_name = request.form.get('survey_name')
     questions = model.get_random_questions(6)
     question_ids = ','.join(str(q['id']) for q in questions)
     survey_uuid = str(uuid.uuid4())
-    model.insert_survey(survey_uuid, question_ids)
+    model.insert_survey(survey_uuid, survey_name, question_ids)
     return redirect(url_for('index'))
 
 @app.route('/results', methods=['GET'])
@@ -78,7 +79,7 @@ def results():
             answers = model.get_answers_by_survey_uuid(survey_uuid)
             weighted_answers = model.get_weighted_answers_by_survey_uuid(survey_uuid)
             average_answers = model.get_aggregated_answers_by_survey_uuid(survey_uuid)
-            return render_template('results.html', questions=questions, answers=answers, weighted_answers=weighted_answers, average_answers=average_answers, survey_uuid=survey_uuid, user=user)
+            return render_template('results.html', survey_name=survey['name'], questions=questions, answers=answers, weighted_answers=weighted_answers, average_answers=average_answers, survey_uuid=survey_uuid, user=user)
     return "Survey not found", 404
 
 @app.route('/delete_survey', methods=['POST'])

@@ -1,9 +1,8 @@
 import sqlite3
 from contextlib import contextmanager
-from typing import Generator
 
 @contextmanager
-def get_db_connection() -> Generator[sqlite3.Connection, None, None]:
+def get_db_connection():
     conn = sqlite3.connect('database.db')
     try:
         yield conn
@@ -15,7 +14,7 @@ def init_db() -> None:
         c = conn.cursor()
         c.execute('CREATE TABLE IF NOT EXISTS questions (id INTEGER PRIMARY KEY, question TEXT, low TEXT, high TEXT, category TEXT)')
         c.execute('CREATE TABLE IF NOT EXISTS answers (id INTEGER PRIMARY KEY, question_id INTEGER, survey_id TEXT, value INTEGER, user TEXT, timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP)')
-        c.execute('CREATE TABLE IF NOT EXISTS surveys (id INTEGER PRIMARY KEY, uuid TEXT, questions TEXT, timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP)')
+        c.execute('CREATE TABLE IF NOT EXISTS surveys (id INTEGER PRIMARY KEY, uuid TEXT, name TEXT, questions TEXT, timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP)')
         conn.commit()
 
 def insert_answer(question_id: int, survey_uuid: str, value: int, user: str) -> None:
@@ -42,7 +41,7 @@ def get_all_surveys() -> list[dict]:
         c = conn.cursor()
         c.execute('SELECT * FROM surveys')
         surveys = c.fetchall()
-    return [{'id': s[0], 'uuid': s[1], 'questions': s[2], 'timestamp': s[3]} for s in surveys]
+    return [{'id': s[0], 'uuid': s[1], 'name': s[2], 'questions': s[3], 'timestamp': s[4]} for s in surveys]
 
 def get_survey_by_uuid(uuid: str) -> dict:
     with get_db_connection() as conn:
@@ -50,7 +49,7 @@ def get_survey_by_uuid(uuid: str) -> dict:
         c.execute('SELECT * FROM surveys WHERE uuid = ?', (uuid,))
         survey = c.fetchone()
     if survey:
-        return {'id': survey[0], 'uuid': survey[1], 'questions': survey[2], 'timestamp': survey[3]}
+        return {'id': survey[0], 'uuid': survey[1], 'name': survey[2], 'questions': survey[3], 'timestamp': survey[4]}
     return None
 
 def get_questions_by_ids(ids: list[str]) -> list[dict]:
@@ -68,10 +67,10 @@ def get_random_questions(limit: int) -> list[dict]:
         questions = c.fetchall()
     return [{'id': q[0], 'question': q[1], 'low': q[2], 'high': q[3], 'category': q[4]} for q in questions]
 
-def insert_survey(uuid: str, question_ids: str) -> None:
+def insert_survey(uuid: str, name: str, question_ids: str) -> None:
     with get_db_connection() as conn:
         c = conn.cursor()
-        c.execute('INSERT INTO surveys (uuid, questions) VALUES (?, ?)', (uuid, question_ids))
+        c.execute('INSERT INTO surveys (uuid, name, questions) VALUES (?, ?, ?)', (uuid, name, question_ids))
         conn.commit()
     
 def get_participant_count() -> dict:

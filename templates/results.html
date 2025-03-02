@@ -2,22 +2,21 @@
 
 {% block title %}Umfrageergebnisse{% endblock %}
 
-{% block header %}Umfrageergebnisse{% endblock %}
+{% block header %}Umfrageergebnisse {{ survey_name }}{% endblock %}
 
 {% block content %}
-<p>Ergebnisse für die Umfrage mit der UUID: {{ survey_uuid }}</p>
 {% if questions and weighted_answers %}
 <table>
     <thead>
         <tr>
-            <th>Frage</th>
+            <th width="40%">Frage</th>
             <th>Antworten</th>
         </tr>
     </thead>
     <tbody>
         {% for question in questions %}
         <tr>
-            <td>{{ question.question }}</td>
+            <td><span class="em">{{ question.question }}</span><br />{{ question.low }} &rarr; {{ question.high }}</td>
             <td>
                 <div class="mermaid">
                     ---
