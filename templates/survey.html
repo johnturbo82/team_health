@@ -1,37 +1,28 @@
-<!DOCTYPE html>
-<html lang="de">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-    <title>Umfrage Team Health</title>
-</head>
+{% block title %}Umfrage{% endblock %}
 
-<body>
-    <div class="container">
-        <h1>Umfrage Team Health</h1>
-        <p>Ein hoher Wert repräsentiert in jeder Frage etwas Positives.</p>
-        {% if questions %}
-        <form method="post" action="/submit_survey">
-            <input type="hidden" name="survey_uuid" value="{{ survey_uuid }}">
-            {% for question in questions %}
-            <div class="question">
-                <p>Kategorie {{ question.category }}</p>
-                <label for="question_{{ question.id }}">{{ question.question }}</label>
-                <input type="range" id="question_{{ question.id }}" name="question_{{ question.id }}" min="1" max="10" value="0"
-                    required>
-                <div class="left">{{ question.low }}</div>
-                <div class="right">{{ question.high }}</div>
-            </div>
-            {% endfor %}
-            <button type="submit">Abschicken</button>
-        </form>
-        {% else %}
-        <p>No questions found for this survey.</p>
-        {% endif %}
-        <p class="user">User ID: {{ user }}</p>
+{% block header %}Umfrage{% endblock %}
+
+{% block content %}
+<p>Ein hoher Wert repräsentiert in jeder Frage etwas Positives.</p>
+{% if questions %}
+<form method="post" action="/submit_survey">
+    <input type="hidden" name="survey_uuid" value="{{ survey_uuid }}">
+    {% for question in questions %}
+    <div class="question">
+        <p>Kategorie {{ question.category }}</p>
+        <label for="question_{{ question.id }}">{{ question.question }}</label>
+        <input type="range" id="question_{{ question.id }}" name="question_{{ question.id }}" min="1" max="10" value="0"
+            required>
+        <div class="left">{{ question.low }}</div>
+        <div class="right">{{ question.high }}</div>
     </div>
-</body>
-
-</html>
+    {% endfor %}
+    <button type="submit">Abschicken</button>
+</form>
+{% else %}
+<p>No questions found for this survey.</p>
+{% endif %}
+<p class="user">User ID: {{ user }}</p>
+{% endblock %}

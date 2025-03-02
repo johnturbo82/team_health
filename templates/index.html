@@ -1,51 +1,37 @@
-<!DOCTYPE html>
-<html lang="de">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-    <title>Team Health</title>
-</head>
-
-<body>
-    <div class="container">
-        <h1>Team Health</h1>
-        <p>Umfragen zur Verbesserung der Teamgesundheit.</p>
-        <form method="post" action="/create_survey">
-            <button type="submit">Neue Umfrage erstellen</button>
-        </form>
-        {% if surveys %}
-        <h2>Umfragen</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Umfrage</th>
-                    <th>Fragen</th>
-                    <th>Erstellt am</th>
-                    <th>Teilnehmer</th>
-                    <th>Ergebnisse</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for survey in surveys %}
-                <tr>
-                    <td>{{ survey.id }}</td>
-                    <td><a href="survey?uuid={{ survey.uuid }}">{{ survey.uuid }}</a></td>
-                    <td>{{ survey.questions }}</td>
-                    <td>{{ survey.timestamp }}</td>
-                    <td>{{ participant_counts[survey.uuid] if survey.uuid in participant_counts else 0 }}</td>
-                    <td><a href="results?uuid={{ survey.uuid }}">anzeigen</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p>Keine Umfragen gefunden.</p>
-        {% endif %}
-        <p class="user">User ID: {{ user }}</p>
-    </div>
-</body>
-
-</html>
+{% block content %}
+<p>Umfragen zur Verbesserung der Teamgesundheit.</p>
+<form method="post" action="/create_survey">
+    <button type="submit">Neue Umfrage erstellen</button>
+</form>
+{% if surveys %}
+<h2>Umfragen</h2>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Umfrage</th>
+            <th>Fragen</th>
+            <th>Erstellt am</th>
+            <th>Teilnehmer</th>
+            <th>Ergebnisse</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for survey in surveys %}
+        <tr>
+            <td>{{ survey.id }}</td>
+            <td><a href="survey?uuid={{ survey.uuid }}">{{ survey.uuid }}</a></td>
+            <td>{{ survey.questions }}</td>
+            <td>{{ survey.timestamp }}</td>
+            <td>{{ participant_counts[survey.uuid] if survey.uuid in participant_counts else 0 }}</td>
+            <td><a href="results?uuid={{ survey.uuid }}">anzeigen</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Keine Umfragen gefunden.</p>
+{% endif %}
+{% endblock %}
