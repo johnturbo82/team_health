@@ -5,7 +5,7 @@
 {% block header %}Umfrageergebnisse {{ survey_name }}{% endblock %}
 
 {% block content %}
-{% if questions and weighted_answers %}
+{% if questions and weighted_answers_by_survey_id %}
 <table>
     <thead>
         <tr>
@@ -26,10 +26,11 @@
                     xychart-beta
                         x-axis "Wertung"
                         y-axis "Anzahl"
-                        bar[{% for i in range(10) %}{{ weighted_answers[question.id][i] }}{% if not loop.last %},{% endif %}{% endfor %}]
+                        bar[{% for i in range(10) %}{{ weighted_answers_by_survey_id[question.id][i] }}{% if not loop.last %},{% endif %}{% endfor %}]
                 </div>
-                <p>Durchschnitt: {{ average_answers[question.id] }}</p>
+                <p>Durchschnitt: {{ average_answers_by_survey_id[question.id] }}</p>
                 <p>Eigene Bewertung: {{ answers[question.id][user] }}</p>
+                <p>Gesamtdurchschnitt: {{ averages[question.id] }}</p>
             </td>
         </tr>
         {% endfor %}

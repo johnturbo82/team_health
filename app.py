@@ -77,9 +77,20 @@ def results():
             question_ids = survey['questions'].split(',')
             questions = model.get_questions_by_ids(question_ids)
             answers = model.get_answers_by_survey_uuid(survey_uuid)
-            weighted_answers = model.get_weighted_answers_by_survey_uuid(survey_uuid)
-            average_answers = model.get_aggregated_answers_by_survey_uuid(survey_uuid)
-            return render_template('results.html', survey_name=survey['name'], questions=questions, answers=answers, weighted_answers=weighted_answers, average_answers=average_answers, survey_uuid=survey_uuid, user=user)
+            weighted_answers_by_survey_id = model.get_weighted_answers_by_survey_uuid(survey_uuid)
+            average_answers_by_survey_id = model.get_average_answers_by_survey_uuid(survey_uuid)
+            averages = model.get_overall_question_average()
+            return render_template(
+                'results.html', 
+                survey_name=survey['name'], 
+                questions=questions, 
+                answers=answers, 
+                weighted_answers_by_survey_id=weighted_answers_by_survey_id, 
+                average_answers_by_survey_id=average_answers_by_survey_id,
+                averages=averages,
+                survey_uuid=survey_uuid, 
+                user=user
+            )
     return "Survey not found", 404
 
 @app.route('/delete_survey', methods=['POST'])

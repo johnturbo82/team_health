@@ -94,7 +94,7 @@ def get_answers_by_survey_uuid(survey_uuid: str) -> dict:
     
     return answers_dict
 
-def get_aggregated_answers_by_survey_uuid(survey_uuid: str) -> dict:
+def get_average_answers_by_survey_uuid(survey_uuid: str) -> dict:
     with get_db_connection() as conn:
         c = conn.cursor()
         c.execute('SELECT question_id, AVG(value) FROM answers WHERE survey_id = ? GROUP BY question_id', (survey_uuid,))
@@ -113,6 +113,13 @@ def get_weighted_answers_by_survey_uuid(survey_uuid: str) -> dict:
             weighted_answers[question_id] = [0] * 10
         weighted_answers[question_id][value - 1] += 1
     return weighted_answers
+
+def get_overall_question_average() -> dict:
+    with get_db_connection() as conn:
+        c = conn.cursor()
+        c.execute('SELECT question_id, AVG(value) FROM answers GROUP BY question_id')
+        averages = c.fetchall()
+    return {a[0]: a[1] for a in averages}
 
 def delete_survey(survey_uuid: str) -> None:
     with get_db_connection() as conn:
