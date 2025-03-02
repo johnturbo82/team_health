@@ -65,15 +65,20 @@ def create_survey():
 
 @app.route('/results', methods=['GET'])
 def results():
+    user = request.cookies.get('user')
+    if not user:
+        return redirect(url_for('index'))
+    
     survey_uuid = request.args.get('uuid')
     if survey_uuid:
         survey = model.get_survey_by_uuid(survey_uuid)
         if survey:
             question_ids = survey['questions'].split(',')
             questions = model.get_questions_by_ids(question_ids)
+            answers = model.get_answers_by_survey_uuid(survey_uuid)
             weighted_answers = model.get_weighted_answers_by_survey_uuid(survey_uuid)
             average_answers = model.get_aggregated_answers_by_survey_uuid(survey_uuid)
-            return render_template('results.html', questions=questions, weighted_answers=weighted_answers, average_answers=average_answers, survey_uuid=survey_uuid)
+            return render_template('results.html', questions=questions, answers=answers, weighted_answers=weighted_answers, average_answers=average_answers, survey_uuid=survey_uuid, user=user)
     return "Survey not found", 404
 
 if __name__ == '__main__':

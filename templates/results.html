@@ -40,6 +40,7 @@
                                 bar[{% for i in range(10) %}{{ weighted_answers[question.id][i] }}{% if not loop.last %},{% endif %}{% endfor %}]
                         </div>
                         <p>Durchschnitt: {{ average_answers[question.id] }}</p>
+                        <p>Eigene Bewertung: {{ answers[question.id][user] }}</p>
                     </td>
                 </tr>
                 {% endfor %}
@@ -48,6 +49,7 @@
         {% else %}
         <p>Keine Ergebnisse gefunden.</p>
         {% endif %}
+        <p class="user">User ID: {{ user }}</p>
     </div>
 </body>
 
