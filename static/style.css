@@ -37,6 +37,20 @@ input[type="submit"]:hover {
     background-color: #4cae4c;
 }
 
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: left;
+}
+
 .container {
     width: 1000px;
     margin: 10px auto 50px;
@@ -59,4 +73,40 @@ input[type="submit"]:hover {
 p.user {
     float: right;
     margin-top: 40px;
+}
+
+.question {
+    position: relative;
+    min-height: 200px;
+    padding: 10px 0;
+}
+
+.question label, .question input {
+    display: block;
+    width: 100%;
+    padding: 15px 0;;
+}
+
+.question label {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.question .left {
+    position: absolute;
+    left: 0;
+}
+
+.question .right {
+    position: absolute;
+    right: 0;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #d8c5c4;
+    color: black;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
 }

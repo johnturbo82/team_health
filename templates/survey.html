@@ -7,22 +7,31 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
     <title>Umfrage Team Health</title>
 </head>
+
 <body>
-    <h1>Umfrage Team Health</h1>
-    {% if questions %}
+    <div class="container">
+        <h1>Umfrage Team Health</h1>
+        <p>Ein hoher Wert repräsentiert in jeder Frage etwas Positives.</p>
+        {% if questions %}
         <form method="post" action="/submit_survey">
-            <ul>
-                {% for question in questions %}
-                    <li>
-                        <label for="question_{{ question.id }}">{{ question.question }}</label>
-                        <input type="range" id="question_{{ question.id }}" name="question_{{ question.id }}" min="1" max="10" required >
-                    </li>
-                {% endfor %}
-            </ul>
-            <button type="submit">Submit</button>
+            <input type="hidden" name="survey_uuid" value="{{ survey_uuid }}">
+            {% for question in questions %}
+            <div class="question">
+                <p>Kategorie {{ question.category }}</p>
+                <label for="question_{{ question.id }}">{{ question.question }}</label>
+                <input type="range" id="question_{{ question.id }}" name="question_{{ question.id }}" min="1" max="10" value="0"
+                    required>
+                <div class="left">{{ question.low }}</div>
+                <div class="right">{{ question.high }}</div>
+            </div>
+            {% endfor %}
+            <button type="submit">Abschicken</button>
         </form>
-    {% else %}
+        {% else %}
         <p>No questions found for this survey.</p>
-    {% endif %}
+        {% endif %}
+        <p class="user">User ID: {{ user }}</p>
+    </div>
 </body>
+
 </html>
