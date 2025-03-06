@@ -1,9 +1,25 @@
+* {
+    --color-black: #21262d;
+    --color-custom-orange: #fe964a;
+    --color-day-mode-gray: #cdcdd2;
+    --color-disabled-text: #666669;
+    --color-future-green: #1eef97;
+    --color-midnight: #1d0638;
+    --color-night-mode-gray: #373741;
+    --color-real-black: #000;
+    --color-real-white: #fff;
+    --color-sun-red: #ee4c40;
+    --color-sunlight: #fef04a;
+    --color-twilight: #442ee0;
+    --color-white: #b7bdc9;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
-    background-color: #121212;
-    color: #E2DFD0;
+    background-color: var(--color-black);
+    color: var(--color-white);
     box-sizing: border-box;
 }
 
@@ -12,7 +28,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a {
-    color: #ded7b1;
+    color: var(--color-future-green);
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--color-sunlight);
 }
 
 form {
@@ -29,27 +50,6 @@ input[type=range] {
     min-width: 300px;
 }
 
-input[type="submit"] {
-    padding: 10px 15px;
-    background-color: #5cb85c;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-input[type="submit"]:hover {
-    background-color: #4cae4c;
-}
-
-/* button {
-    padding: 10px 15px;
-    background-color: #d8c5c4;
-    color: black;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-} */
-
 .navigation {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -65,7 +65,7 @@ input[type="submit"]:hover {
 
 button {
     padding: 10px 15px;
-    background-color: #d8c5c4;
+    background-color: var(--color-future-green);
     color: black;
     border: none;
     cursor: pointer;
@@ -74,7 +74,7 @@ button {
 }
 
 button:hover {
-    background-color: rebeccapurple;
+    background-color: var(--color-sunlight);
 }
 
 table {
@@ -83,7 +83,7 @@ table {
 }
 
 table, th, td {
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-day-mode-gray);
 }
 
 table th, table td {
@@ -92,9 +92,10 @@ table th, table td {
 }
 
 .container {
+    position: relative;
     width: 1000px;
     margin: 10px auto 50px;
-    background-color: #202020;
+    background-color: var(--color-night-mode-gray);
     padding: 30px;
     border-radius: 10px;
 }
@@ -102,8 +103,8 @@ table th, table td {
 .saved-values {
     margin-top: 20px;
     padding: 10px;
-    background-color: #fff;
-    border: 1px solid #ddd;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-day-mode-gray);
 }
 
 .saved-values p {
@@ -123,7 +124,7 @@ span.em {
 .question-container {
     padding: 20px;
     border-radius: 10px;
-    background-color: #303030;
+    background-color: var(--color-midnight);
 }
 
 .question {
