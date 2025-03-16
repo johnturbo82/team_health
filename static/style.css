@@ -167,3 +167,7 @@ span.em {
 .question:last-of-type {
     border-bottom: none;
 }
+
+.mermaid svg[aria-roledescription="xychart"] g.main rect.background {
+    opacity: 0;
+}
