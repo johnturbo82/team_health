@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Admin{% endblock %}
+
+{% block header %}Admin-Bereich{% endblock %}
+
+{% block content %}
+<p>Hier die Datenbank als Backup herunterladen:</p>
+<br />
+<a href="{{ url_for('download_db') }}" class="button">Datenbank herunterladen</a>
+{% endblock %}

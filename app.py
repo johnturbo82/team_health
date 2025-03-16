@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, make_response
+from flask import Flask, render_template, redirect, request, send_file, url_for, make_response
 import model
 import uuid
 import datetime
@@ -99,6 +99,17 @@ def delete_survey():
     if survey_uuid:
         model.delete_survey(survey_uuid)
     return redirect(url_for('index'))
+
+@app.route('/admin')
+def admin():
+    user = request.cookies.get('user')
+    if not user:
+        return redirect(url_for('index'))
+    return render_template('admin.html', user=user)
+
+@app.route('/download_db')
+def download_db():
+    return send_file('database.db', as_attachment=True)
 
 if __name__ == '__main__':
     model.init_db()
