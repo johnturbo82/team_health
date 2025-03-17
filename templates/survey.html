@@ -5,7 +5,6 @@
 {% block header %}Umfrage {{ survey_name }}{% endblock %}
 
 {% block content %}
-<p>Ein hoher Wert repräsentiert in jeder Frage etwas Positives.</p>
 {% if questions %}
 <form method="post" action="/submit_survey">
     <input type="hidden" name="survey_uuid" value="{{ survey_uuid }}">
