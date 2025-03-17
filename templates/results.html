@@ -4,6 +4,7 @@
 
 {% block header %}Umfrageergebnisse {{ survey_name }}{% endblock %}
 
+
 {% block content %}
 {% if questions and weighted_answers_by_survey_id %}
 <table>
@@ -28,8 +29,27 @@
                         y-axis "Anzahl"
                         bar[{% for i in range(10) %}{{ weighted_answers_by_survey_id[question.id][i] }}{% if not loop.last %},{% endif %}{% endfor %}]
                 </div>
-                <p>Durchschnitt: {{ average_answers_by_survey_id[question.id] }}</p>
-                <p>Eigene Bewertung: {{ answers[question.id][user] }}</p>
+                <div class="average-box">
+                    {{ average_answers_by_survey_id[question.id] }}
+                    {% if average_answers_by_survey_id[question.id] > averages[question.id] %}
+                        <div class="direction-box">
+                            &uarr;
+                        </div>
+                    {% endif %}
+                    {% if average_answers_by_survey_id[question.id] == averages[question.id] %}
+                        <div class="direction-box">
+                            &bull;
+                        </div>
+                    {% endif %}
+                    {% if average_answers_by_survey_id[question.id] < averages[question.id] %}
+                        <div class="direction-box">
+                            &darr;
+                        </div>
+                    {% endif %}
+                </div>
+                {% if answers[question.id][user] %}
+                    <p>Deine Bewertung: {{ answers[question.id][user] }}</p>
+                {% endif %}
                 <p>Gesamtdurchschnitt: {{ averages[question.id] }}</p>
             </td>
         </tr>

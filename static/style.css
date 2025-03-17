@@ -1,18 +1,5 @@
-* {
-    --color-black: #21262d;
-    --color-custom-orange: #fe964a;
-    --color-day-mode-gray: #cdcdd2;
-    --color-disabled-text: #666669;
-    --color-future-green: #1eef97;
-    --color-midnight: #1d0638;
-    --color-night-mode-gray: #373741;
-    --color-real-black: #000;
-    --color-real-white: #fff;
-    --color-sun-red: #ee4c40;
-    --color-sunlight: #fef04a;
-    --color-twilight: #442ee0;
-    --color-white: #b7bdc9;
-}
+@import url("colors.css");
+@import url("slider.css");
 
 body {
     font-family: Arial, sans-serif;
@@ -157,6 +144,11 @@ span.em {
     transform: translateX(50%);
 }
 
+.question .middle#score {
+    margin-top: -8px;
+    font-size: 30px;
+}
+
 .question .right {
     position: absolute;
     right: 0;
@@ -172,4 +164,13 @@ span.em {
 
 .mermaid svg[aria-roledescription="xychart"] g.main rect.background {
     opacity: 0;
+}
+
+.average-box {
+    padding: 15px;
+    border-radius: 10px;
+    background-color: var(--color-midnight);
+    margin-top: 20px;
+    display: inline-block;
+    font-size: 25px;
 }
