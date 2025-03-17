@@ -174,3 +174,20 @@ span.em {
     display: inline-block;
     font-size: 25px;
 }
+
+.average-box .direction-box {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.average-box .direction-box.up {
+    color: var(--color-future-green);
+}
+
+.average-box .direction-box.down {
+    color: var(--color-sun-red);
+}
+
+.average-box .direction-box.equal {
+    color: var(--color-white);
+}

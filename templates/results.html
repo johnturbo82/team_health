@@ -32,17 +32,17 @@
                 <div class="average-box">
                     {{ average_answers_by_survey_id[question.id] }}
                     {% if average_answers_by_survey_id[question.id] > averages[question.id] %}
-                        <div class="direction-box">
+                        <div class="direction-box up">
                             &uarr;
                         </div>
                     {% endif %}
                     {% if average_answers_by_survey_id[question.id] == averages[question.id] %}
-                        <div class="direction-box">
+                        <div class="direction-box equal">
                             &bull;
                         </div>
                     {% endif %}
                     {% if average_answers_by_survey_id[question.id] < averages[question.id] %}
-                        <div class="direction-box">
+                        <div class="direction-box down">
                             &darr;
                         </div>
                     {% endif %}
