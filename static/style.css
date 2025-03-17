@@ -166,6 +166,10 @@ span.em {
     opacity: 0;
 }
 
+.mermaid svg[aria-roledescription="xychart"] g.bar-plot-0 rect {
+    fill: var(--color-twilight);
+}
+
 .average-box {
     padding: 15px;
     border-radius: 10px;
