@@ -1,9 +1,11 @@
 import sqlite3
 from contextlib import contextmanager
 
+DATABASE_FILE = 'database.db'
+
 @contextmanager
 def get_db_connection():
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(DATABASE_FILE)
     try:
         yield conn
     finally:
