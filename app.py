@@ -2,13 +2,15 @@ from flask import Flask, render_template, redirect, request, send_file, url_for,
 import model
 import uuid
 import datetime
+import yaml
 
 app = Flask(__name__)
-app.secret_key = "PrvpxwrYp5rRww26ocRaYLMCAEyt7wWgh7bHWmoH6quDWz0ALOz4IB" 
+with open("config.yaml", "r") as file:
+    config = yaml.safe_load(file)
+app.secret_key = config["secret_key"]
 
-# Dummy-Benutzername und Passwort
-USERNAME = "team"
-PASSWORD = "leberkäs"
+USERNAME = config["username"]
+PASSWORD = config["password"]
 
 def login_required(f):
     def decorated_function(*args, **kwargs):
