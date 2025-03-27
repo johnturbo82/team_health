@@ -57,9 +57,15 @@ def index():
 
 @app.route("/survey", methods=["GET"])
 def survey():
-    user = request.cookies.get("user")
-    if not user:
-        return redirect(url_for("index"))
+    user = ""
+    if not request.cookies.get("user"):
+        resp = make_response(redirect(request.url))
+        expires_date = datetime.datetime.now() + datetime.timedelta(days=365)
+        user = str(uuid.uuid4())
+        resp.set_cookie("user", user, expires=expires_date)
+        return resp
+    else:
+        user = request.cookies.get("user")
 
     survey_uuid = request.args.get("uuid")
     if survey_uuid:
