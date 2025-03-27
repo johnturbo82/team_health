@@ -59,7 +59,7 @@ def index():
 def survey():
     user = ""
     if not request.cookies.get("user"):
-        resp = make_response(redirect(request.url))
+        resp = make_response(redirect(request.url.replace("localhost:8000", "teamhealth.schoettner.dev")))
         expires_date = datetime.datetime.now() + datetime.timedelta(days=365)
         user = str(uuid.uuid4())
         resp.set_cookie("user", user, expires=expires_date)
