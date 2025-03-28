@@ -219,3 +219,7 @@ span.em {
 .average-box .direction-box.equal {
     color: var(--color-white);
 }
+
+.toggle-private {
+    margin-bottom: 20px;
+}

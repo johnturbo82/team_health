@@ -16,7 +16,7 @@
             <label for="question_input_{{ question.id }}">{{ question.question }}</label>
             <input type="range" id="question_input_{{ question.id }}" name="question_{{ question.id }}" min="1" max="10" value="1" required>
             <div class="left">{{ question.low }}</div>
-            <div class="middle" id="score">0</div>
+            <div class="middle" id="score">1</div>
             <div class="right">{{ question.high }}</div>
         </div>
         {% endfor %}

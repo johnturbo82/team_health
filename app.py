@@ -117,6 +117,7 @@ def results():
         return redirect(url_for("index"))
     
     survey_uuid = request.args.get("uuid")
+    private = request.args.get("private")
     if survey_uuid:
         survey = model.get_survey_by_uuid(survey_uuid)
         if survey:
@@ -127,14 +128,16 @@ def results():
             average_answers_by_survey_id = model.get_average_answers_by_survey_uuid(survey_uuid)
             averages = model.get_overall_question_average()
             return render_template(
-                "results.html", 
+                "results.html",
+                request=request,
                 survey_name=survey["name"], 
                 questions=questions, 
                 answers=answers, 
                 weighted_answers_by_survey_id=weighted_answers_by_survey_id, 
                 average_answers_by_survey_id=average_answers_by_survey_id,
                 averages=averages,
-                survey_uuid=survey_uuid, 
+                survey_uuid=survey_uuid,
+                private=private if private else False,
                 user=user,
                 logged_in=session.get("logged_in")
             )
