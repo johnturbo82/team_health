@@ -95,9 +95,9 @@ def submit_survey():
     
     return redirect(url_for("success"))
 
-@app.route('/success')
+@app.route("/success")
 def success():
-    return render_template('success.html')
+    return render_template("success.html")
 
 @app.route("/create_survey", methods=["POST"])
 @login_required
