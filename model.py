@@ -31,13 +31,6 @@ def insert_answer(question_id: int, survey_uuid: str, value: int, user: str) -> 
         
         conn.commit()
 
-def get_answers() -> list[any]:
-    with get_db_connection() as conn:
-        c = conn.cursor()
-        c.execute('SELECT * FROM answers')
-        answers = c.fetchall()
-    return answers
-
 def get_all_surveys() -> list[dict]:
     with get_db_connection() as conn:
         c = conn.cursor()
@@ -116,12 +109,25 @@ def get_weighted_answers_by_survey_uuid(survey_uuid: str) -> dict:
         weighted_answers[question_id][value - 1] += 1
     return weighted_answers
 
-def get_overall_question_average() -> dict:
+def get_overall_question_averages() -> dict:
     with get_db_connection() as conn:
         c = conn.cursor()
         c.execute('SELECT question_id, ROUND(AVG(value), 1) FROM answers GROUP BY question_id')
         averages = c.fetchall()
     return {a[0]: a[1] for a in averages}
+
+def get_last_averages(survey_uuid: str, questions: list[int]) -> dict[int, float]:
+    averages = {}
+    with get_db_connection() as conn:
+        c = conn.cursor()
+        for question in questions:
+            c.execute("SELECT ROUND(AVG(value), 1) FROM answers WHERE survey_id = (SELECT uuid FROM surveys WHERE ',' || questions || ',' LIKE ? AND timestamp < (SELECT timestamp FROM surveys WHERE uuid = ?) ORDER BY timestamp DESC LIMIT 1) AND question_id = ?", (f"%{question}%", survey_uuid, question,))
+            average = c.fetchall()
+            if average[0][0] is not None:
+                averages[question] = average[0][0]
+            else:
+                averages[question] = 0
+    return averages
 
 def delete_survey(survey_uuid: str) -> None:
     with get_db_connection() as conn:

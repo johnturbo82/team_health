@@ -12,7 +12,7 @@
         <a href="?{% for key, value in request.args.items() %}{{ key }}={{ value }}&{% endfor %}private=1">Private Ansicht aktivieren</a>
     {% endif %}
 </div>
-{% if questions and weighted_answers_by_survey_id %}
+{% if questions and weighted_answers %}
 <table>
     <thead>
         <tr>
@@ -33,33 +33,35 @@
                     xychart-beta
                         x-axis "Wertung"
                         y-axis "Anzahl"
-                        bar[{% for i in range(10) %}{{ weighted_answers_by_survey_id[question.id][i] }}{% if not loop.last %},{% endif %}{% endfor %}]
+                        bar[{% for i in range(10) %}{{ weighted_answers[question.id][i] }}{% if not loop.last %},{% endif %}{% endfor %}]
                         {% if question.id in answers and user in answers[question.id] and not private %}
                             line[{% set line_values = [0] * 10 %}{% set user_value = answers[question.id][user] %}{% set line_values = line_values[:user_value-1] + [1] + line_values[user_value:] %}{{ line_values | join(',') }}]
                         {% endif %}
                 </div>
                 <div class="average-box">
-                    {{ average_answers_by_survey_id[question.id] }}
-                    {% if average_answers_by_survey_id[question.id] > averages[question.id] %}
+                    {{ (average_answers[question.id] - last_averages[question.id | string]) }}
+                    {% if average_answers[question.id] > last_averages[question.id | string] %}
                         <div class="direction-box up">
                             &uarr;
                         </div>
                     {% endif %}
-                    {% if average_answers_by_survey_id[question.id] == averages[question.id] %}
+                    {% if average_answers[question.id] == last_averages[question.id | string] %}
                         <div class="direction-box equal">
                             &bull;
                         </div>
                     {% endif %}
-                    {% if average_answers_by_survey_id[question.id] < averages[question.id] %}
+                    {% if average_answers[question.id] < last_averages[question.id | string] %}
                         <div class="direction-box down">
                             &darr;
                         </div>
                     {% endif %}
                 </div>
+                <p>Durchschnitt: {{ average_answers[question.id] }}</p>
+                <p>Durchschnitt letzte Umfrage: {{ last_averages[question.id | string] }}</p>
                 {% if question.id in answers and user in answers[question.id] and not private %}
                     <p>Deine Bewertung: {{ answers[question.id][user] }}</p>
                 {% endif %}
-                <p>Gesamtdurchschnitt: {{ averages[question.id] }}</p>
+                <p>Gesamtdurchschnitt: {{ overall_averages[question.id] }}</p>
             </td>
         </tr>
         {% endfor %}
