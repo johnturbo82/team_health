@@ -2,12 +2,33 @@
 
 {% block content %}
 <p>Umfragen zur Verbesserung der Teamgesundheit.</p>
+<h2>Aktuelle Durchschnittswerte</h2>
+<div class="mermaid">
+    ---
+    config:
+        theme: "dark"
+    ---
+    journey
+        section Health
+        {% for name, value in average_per_category.items() %}
+            {{ name }}: {{ (value - 1) }}
+        {% endfor %}
+        section Individual
+            Selbsteinschätzung: {{ (selfcare - 1) }}
+            
+</div>
+<ul>
+    {% for name, value in average_per_category.items() %}
+        <li>{{ name }}: {{ value }}</li>
+    {% endfor %}
+    <li>Selbsteinschätzung: {{ selfcare }}</li>
+</ul>
+<h2>Umfragen</h2>
 <form method="post" action="/create_survey">
     <input type="text" id="survey_name" name="survey_name" required>
     <button type="submit">Neue Umfrage erstellen</button>
 </form>
 {% if surveys %}
-<h2>Umfragen</h2>
 <table>
     <thead>
         <tr>

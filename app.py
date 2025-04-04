@@ -51,9 +51,13 @@ def index():
     else:
         user = request.cookies.get("user")
         
+    average_per_category = model.get_average_per_category()
+    selfcare = average_per_category["Selbsteinschätzung"]
+    average_per_category.pop("Selbsteinschätzung")
+        
     surveys = model.get_all_surveys()
     participant_counts = model.get_participant_count()
-    return render_template("index.html", surveys=surveys, participant_counts=participant_counts, user=user, logged_in=session.get("logged_in"))
+    return render_template("index.html", average_per_category=average_per_category, selfcare=selfcare, surveys=surveys, participant_counts=participant_counts, user=user, logged_in=session.get("logged_in"))
 
 @app.route("/survey", methods=["GET"])
 def survey():

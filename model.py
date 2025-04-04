@@ -135,3 +135,10 @@ def delete_survey(survey_uuid: str) -> None:
         c.execute("DELETE FROM surveys WHERE uuid = ?", (survey_uuid,))
         c.execute("DELETE FROM answers WHERE survey_id = ?", (survey_uuid,))
         conn.commit()
+
+def get_average_per_category() -> dict:
+    with get_db_connection() as conn:
+        c = conn.cursor()
+        c.execute("SELECT category, ROUND(AVG(value), 1) FROM answers JOIN questions ON answers.question_id = questions.id GROUP BY category")
+        averages = c.fetchall()
+    return {a[0]: a[1] for a in averages}
