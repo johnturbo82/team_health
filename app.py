@@ -52,8 +52,10 @@ def index():
         user = request.cookies.get("user")
         
     average_per_category = model.get_average_per_category()
-    selfcare = average_per_category["Selbsteinschätzung"]
-    average_per_category.pop("Selbsteinschätzung")
+    selfcare = 0
+    if "Selbsteinschätzung" in average_per_category:
+        selfcare = average_per_category["Selbsteinschätzung"]
+        average_per_category.pop("Selbsteinschätzung")
         
     surveys = model.get_all_surveys()
     participant_counts = model.get_participant_count()
