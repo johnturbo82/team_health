@@ -39,8 +39,10 @@
                         {% endif %}
                 </div>
                 <div class="average-box">
-                    {{ (average_answers[question.id] - last_averages[question.id | string]) }}
-                    {% if average_answers[question.id] > last_averages[question.id | string] %}
+                    {{ average_answers[question.id] }}
+                    {{ last_averages[question.id | string] }}
+
+                    {{ (average_answers[question.id] - last_averages[question.id | string]) | round(1) }}                    {% if average_answers[question.id] > last_averages[question.id | string] %}
                         <div class="direction-box up">
                             &uarr;
                         </div>

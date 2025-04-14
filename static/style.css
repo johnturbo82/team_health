@@ -23,10 +23,6 @@ a:hover {
     color: var(--color-sunlight);
 }
 
-form {
-    margin-bottom: 20px;
-}
-
 input[type="text"], input[type="password"] {
     padding: 5px;
     width: 300px;
@@ -40,14 +36,11 @@ input[type=range] {
 .navigation {
     margin-top: 20px;
     margin-bottom: 20px;
+    height: 37px;
 }
 
-.navigation .previous {
-    margin-right: 0;
-}
-
-.navigation .next {
-    margin-left: 0;
+.navigation #next {
+    float: right;
 }
 
 button, .button, input[type="submit"], input::file-selector-button {
@@ -93,6 +86,7 @@ button:hover, .button:hover {
 table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 20px;
 }
 
 table, th, td {
