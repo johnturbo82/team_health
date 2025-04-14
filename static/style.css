@@ -85,17 +85,37 @@ button:hover, .button:hover {
 
 table {
     width: 100%;
+    border-collapse: collapse;
     margin-top: 20px;
-    border-spacing: 10px;
+}
+
+table, th, td {
+    border: 1px solid var(--color-day-mode-gray);
 }
 
 table th, table td {
+    padding: 10px;
+    text-align: left;
+}
+
+table.results {
+    width: 100%;
+    margin-top: 20px;
+    border-spacing: 10px;
+    border-collapse: separate;
+}
+
+table.results, table.results th, table.results td {
+    border: none;
+}
+
+table.results th, table.results td {
     padding: 12px;
     text-align: left;
     border-radius: 10px;
 }
 
-table tr {
+table.results  tr {
     background-color: var(--color-black);
 }
 
