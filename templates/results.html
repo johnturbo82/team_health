@@ -5,6 +5,9 @@
 {% block header %}Umfrageergebnisse {{ survey_name }}{% endblock %}
 
 {% block content %}
+{% if not closed %}
+<p>Die Umfrage ist noch nicht abgeschlossen. Ergebnisse stehen erst nach Abschluss zur Verfügung.</p>
+{% else %}
 <div class="toggle-private">
     {% if private %}
         <a href="?{% for key, value in request.args.items() %}{% if key != 'private' %}{{ key }}={{ value }}{% endif %}{% endfor %}">Private Ansicht deaktivieren</a>
@@ -39,9 +42,6 @@
                         {% endif %}
                 </div>
                 <div class="average-box">
-                    {{ average_answers[question.id] }}
-                    {{ last_averages[question.id | string] }}
-
                     {{ (average_answers[question.id] - last_averages[question.id | string]) | round(1) }}                    {% if average_answers[question.id] > last_averages[question.id | string] %}
                         <div class="direction-box up">
                             &uarr;
@@ -71,5 +71,6 @@
 </table>
 {% else %}
 <p>Keine Ergebnisse gefunden.</p>
+{% endif %}
 {% endif %}
 {% endblock %}

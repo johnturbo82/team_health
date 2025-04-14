@@ -53,8 +53,14 @@
             <td>
                 <form method="post" action="/delete_survey" style="display:inline;" onsubmit="return confirm('Willst Du die Umfrage wirklich löschen?');">
                     <input type="hidden" name="uuid" value="{{ survey.uuid }}">
-                    <button type="submit">Umfrage löschen</button>
+                    <button type="submit">Löschen</button>
                 </form>
+                {% if not survey.closed %}
+                <form method="post" action="/close_survey" style="display:inline;" onsubmit="return confirm('Willst Du die Umfrage wirklich schließen?');">
+                    <input type="hidden" name="uuid" value="{{ survey.uuid }}">
+                    <button type="submit">Schließen</button>
+                </form>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}

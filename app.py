@@ -79,7 +79,15 @@ def survey():
         if survey:
             question_ids = survey["questions"].split(",")
             questions = model.get_questions_by_ids(question_ids)
-            return render_template("survey.html", questions=questions, survey_name=survey["name"], survey_uuid=survey_uuid, user=user, logged_in=session.get("logged_in"))
+            return render_template(
+                "survey.html", 
+                closed=survey["closed"],
+                questions=questions, 
+                survey_name=survey["name"], 
+                survey_uuid=survey_uuid, 
+                user=user, 
+                logged_in=session.get("logged_in")
+            )
     return "Survey not found", 404
 
 @app.route("/submit_survey", methods=["POST"])
@@ -130,6 +138,7 @@ def results():
             question_ids = survey["questions"].split(",")
             return render_template(
                 "results.html",
+                closed=survey["closed"],
                 request=request,
                 survey_name=survey["name"], 
                 questions=model.get_questions_by_ids(question_ids), 
@@ -151,6 +160,13 @@ def delete_survey():
     survey_uuid = request.form.get("uuid")
     if survey_uuid:
         model.delete_survey(survey_uuid)
+    return redirect(url_for("index"))
+
+@app.route("/close_survey", methods=["POST"])
+def close_survey():
+    survey_uuid = request.form.get("uuid")
+    if survey_uuid:
+        model.update_survey_closed_status(survey_uuid, True)
     return redirect(url_for("index"))
 
 @app.route("/admin")
