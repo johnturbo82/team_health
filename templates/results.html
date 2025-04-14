@@ -17,16 +17,10 @@
 </div>
 {% if questions and weighted_answers %}
 <table>
-    <thead>
-        <tr>
-            <th width="40%">Frage</th>
-            <th>Antworten</th>
-        </tr>
-    </thead>
     <tbody>
         {% for question in questions %}
         <tr>
-            <td><span class="em">{{ question.question }}</span><br />{{ question.low }} &rarr; {{ question.high }}</td>
+            <td width="40%"><span class="em">{{ question.question }}</span><br />{{ question.low }} &rarr; {{ question.high }}</td>
             <td>
                 <div class="mermaid">
                     ---
