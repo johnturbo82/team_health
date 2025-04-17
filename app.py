@@ -207,7 +207,7 @@ def upload_db():
 
 @app.route("/rate_survey", methods=["GET"])
 def rate_survey():
-    survey_uuid = request.args.get("survey_uuid")
+    survey_uuid = request.args.get("uuid")
     if survey_uuid:
         survey = model.get_survey_by_uuid(survey_uuid)
         if survey:
