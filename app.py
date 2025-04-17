@@ -59,7 +59,15 @@ def index():
         
     surveys = model.get_all_surveys()
     participant_counts = model.get_participant_count()
-    return render_template("index.html", average_per_category=average_per_category, selfcare=selfcare, surveys=surveys, participant_counts=participant_counts, user=user, logged_in=session.get("logged_in"))
+    return render_template(
+        "index.html", 
+        average_per_category=average_per_category, 
+        selfcare=selfcare, 
+        surveys=surveys, 
+        participant_counts=participant_counts, 
+        user=user, 
+        logged_in=session.get("logged_in")
+    )
 
 @app.route("/survey", methods=["GET"])
 def survey():
@@ -148,6 +156,7 @@ def results():
                 overall_averages=model.get_overall_question_averages(),
                 last_averages=model.get_last_averages(survey_uuid, question_ids),
                 survey_uuid=survey_uuid,
+                score=model.get_scores_by_survey(survey_uuid),
                 private=private if private else False,
                 user=user,
                 logged_in=session.get("logged_in")
@@ -195,6 +204,30 @@ def upload_db():
             file.save(model.DATABASE_FILE)
             return redirect(url_for("admin"))
     return redirect(url_for("admin"))
+
+@app.route("/rate_survey", methods=["GET"])
+def rate_survey():
+    survey_uuid = request.args.get("survey_uuid")
+    if survey_uuid:
+        survey = model.get_survey_by_uuid(survey_uuid)
+        if survey:
+            return render_template("rate_survey.html", survey=survey)
+    return "Survey not found", 404
+
+
+@app.route("/submit_score", methods=["POST"])
+def submit_score():
+    survey_uuid = request.form.get("survey_uuid")
+    user_uuid = request.cookies.get("user")
+    score = int(request.form.get("score"))
+
+    if not (1 <= score <= 10):
+        return "Score muss zwischen 1 und 10 liegen.", 400
+
+    if survey_uuid and user_uuid:
+        model.insert_or_update_score(survey_uuid, user_uuid, score)
+        return redirect(url_for("index"))
+    return "Fehlende Daten.", 400
 
 if __name__ == "__main__":
     model.init_db()

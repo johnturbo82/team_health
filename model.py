@@ -17,6 +17,16 @@ def init_db() -> None:
         c.execute("CREATE TABLE IF NOT EXISTS questions (id INTEGER PRIMARY KEY, question TEXT, low TEXT, high TEXT, category TEXT)")
         c.execute("CREATE TABLE IF NOT EXISTS answers (id INTEGER PRIMARY KEY, question_id INTEGER, survey_id TEXT, value INTEGER, user TEXT, timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
         c.execute("CREATE TABLE IF NOT EXISTS surveys (id INTEGER PRIMARY KEY, uuid TEXT, name TEXT, questions TEXT, closed BOOLEAN DEFAULT 0, timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS scores (
+                id INTEGER PRIMARY KEY,
+                survey_uuid TEXT NOT NULL,
+                user_uuid TEXT NOT NULL,
+                score INTEGER NOT NULL CHECK(score BETWEEN 1 AND 10),
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(survey_uuid, user_uuid)
+            )
+        """)
         conn.commit()
 
 def insert_answer(question_id: int, survey_uuid: str, value: int, user: str) -> None:
@@ -30,6 +40,23 @@ def insert_answer(question_id: int, survey_uuid: str, value: int, user: str) -> 
             c.execute("INSERT INTO answers (question_id, survey_id, value, user) VALUES (?, ?, ?, ?)", (question_id, survey_uuid, value, user))
         
         conn.commit()
+        
+def insert_or_update_score(survey_uuid: str, user_uuid: str, score: int) -> None:
+    with get_db_connection() as conn:
+        c = conn.cursor()
+        c.execute("""
+            INSERT INTO scores (survey_uuid, user_uuid, score)
+            VALUES (:survey_uuid, :user_uuid, :score)
+            ON CONFLICT(survey_uuid, user_uuid) DO UPDATE SET score = :score, timestamp = CURRENT_TIMESTAMP
+        """, {"survey_uuid": survey_uuid, "user_uuid": user_uuid, "score": score})
+        conn.commit()
+        
+def get_scores_by_survey(survey_uuid: str) -> float:
+    with get_db_connection() as conn:
+        c = conn.cursor()
+        c.execute("SELECT ROUND(AVG(score), 1) FROM scores WHERE survey_uuid = ?", (survey_uuid,))
+        average_score = c.fetchone()[0]
+    return average_score if average_score is not None else 0.0
 
 def get_all_surveys() -> list[dict]:
     with get_db_connection() as conn:
@@ -38,10 +65,10 @@ def get_all_surveys() -> list[dict]:
         surveys = c.fetchall()
     return [{"id": s[0], "uuid": s[1], "name": s[2], "questions": s[3], "closed": s[5], "timestamp": s[4]} for s in surveys]
 
-def get_survey_by_uuid(uuid: str) -> dict:
+def get_survey_by_uuid(survey_uuid: str) -> dict:
     with get_db_connection() as conn:
         c = conn.cursor()
-        c.execute("SELECT * FROM surveys WHERE uuid = ?", (uuid,))
+        c.execute("SELECT * FROM surveys WHERE uuid = ?", (survey_uuid,))
         survey = c.fetchone()
     if survey:
         return {"id": survey[0], "uuid": survey[1], "name": survey[2], "questions": survey[3], "closed": survey[5], "timestamp": survey[4]}

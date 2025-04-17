@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Umfrageergebnisse{% endblock %}
+
+{% block header %}Umfrageergebnisse {{ survey_name }}{% endblock %}
+
+{% block content %}
+{% if not survey.closed %}
+<p>Die Umfrage ist noch nicht abgeschlossen. Retro kann nicht bewertet werden.</p>
+{% else %}
+<form method="post" action="/submit_score">
+    <input type="hidden" name="survey_uuid" value="{{ survey.uuid }}">
+    <div class="question-container">
+        <span id="question-counter"></span>
+        <div class="question">
+            <label for="rating">Wie gut war die Zeit für die Retro verwendet?</label>
+            <input type="range" id="retro-score" name="score" min="1" max="10" value="1" required>
+            <div class="left">Zeitverschwendung</div>
+            <div class="middle" id="score">1</div>
+            <div class="right">Bestens investierte Zeit</div>
+        </div>
+    </div>
+    <br /><br />
+    <button type="submit" id="submit">Abschicken</button>
+</form>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    function updateScore(event) {
+        const scoreElement = event.target.closest('.question').querySelector('#score');
+        scoreElement.textContent = event.target.value;
+    }
+
+    const questions = document.querySelectorAll(".question");
+    questions.forEach(question => {
+        const rangeInput = question.querySelector('input[type="range"]');
+        rangeInput.addEventListener('input', updateScore);
+    });
+});
+</script>
+{% endblock %}
