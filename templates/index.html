@@ -49,7 +49,7 @@
             <td>{{ survey.timestamp }}</td>
             <td>{{ participant_counts[survey.uuid] if survey.uuid in participant_counts else 0 }}</td>
             <td>{{ survey.score }}</td>
-            <td><a class="button" href="results?uuid={{ survey.uuid }}&private=1">Mit eigener Wertung</a><a class="button" href="results?uuid={{ survey.uuid }}">Öffentlich</a></td>
+            <td><a class="button" href="results?uuid={{ survey.uuid }}&private=1">Öffentlich</a><a class="button" href="results?uuid={{ survey.uuid }}">Mit eigener Wertung</a></td>
             <td>
                 <a class="button" href="rate_survey?uuid={{ survey.uuid }}">Bewerten</a>
                 <form method="post" action="/delete_survey" style="display:inline;" onsubmit="return confirm('Willst Du die Umfrage wirklich löschen?');">
