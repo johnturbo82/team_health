@@ -17,6 +17,7 @@ def init_db() -> None:
         c.execute("CREATE TABLE IF NOT EXISTS questions (id INTEGER PRIMARY KEY, question TEXT, low TEXT, high TEXT, category TEXT)")
         c.execute("CREATE TABLE IF NOT EXISTS answers (id INTEGER PRIMARY KEY, question_id INTEGER, survey_id TEXT, value INTEGER, user TEXT, timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
         c.execute("CREATE TABLE IF NOT EXISTS surveys (id INTEGER PRIMARY KEY, uuid TEXT, name TEXT, questions TEXT, closed BOOLEAN DEFAULT 0, timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+        c.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, uuid TEXT UNIQUE, name TEXT)")
         c.execute("""
             CREATE TABLE IF NOT EXISTS scores (
                 id INTEGER PRIMARY KEY,
@@ -51,19 +52,26 @@ def insert_or_update_score(survey_uuid: str, user_uuid: str, score: int) -> None
         """, {"survey_uuid": survey_uuid, "user_uuid": user_uuid, "score": score})
         conn.commit()
         
-def get_scores_by_survey(survey_uuid: str) -> float:
+def get_score_by_survey(survey_uuid: str) -> float:
     with get_db_connection() as conn:
         c = conn.cursor()
         c.execute("SELECT ROUND(AVG(score), 1) FROM scores WHERE survey_uuid = ?", (survey_uuid,))
         average_score = c.fetchone()[0]
     return average_score if average_score is not None else 0.0
 
+def get_score_count_by_survey(survey_uuid: str) -> int:
+    with get_db_connection() as conn:
+        c = conn.cursor()
+        c.execute("SELECT COUNT(*) FROM scores WHERE survey_uuid = ?", (survey_uuid,))
+        count = c.fetchone()[0]
+    return count
+
 def get_all_surveys() -> list[dict]:
     with get_db_connection() as conn:
         c = conn.cursor()
         c.execute("SELECT * FROM surveys")
         surveys = c.fetchall()
-    return [{"id": s[0], "uuid": s[1], "name": s[2], "questions": s[3], "closed": s[5], "timestamp": s[4]} for s in surveys]
+    return [{"id": s[0], "uuid": s[1], "name": s[2], "questions": s[3], "score": get_score_by_survey(s[1]), "closed": s[5], "timestamp": s[4]} for s in surveys]
 
 def get_survey_by_uuid(survey_uuid: str) -> dict:
     with get_db_connection() as conn:
@@ -175,3 +183,29 @@ def update_survey_closed_status(survey_uuid: str, closed: bool) -> None:
         c = conn.cursor()
         c.execute("UPDATE surveys SET closed = ? WHERE uuid = ?", (int(closed), survey_uuid))
         conn.commit()
+
+def get_user_by_uuid(user_uuid: str) -> dict:
+    with get_db_connection() as conn:
+        c = conn.cursor()
+        c.execute("SELECT id, uuid, name FROM users WHERE uuid = ?", (user_uuid,))
+        user = c.fetchone()
+    if user:
+        return user[2]
+    return None
+
+def update_user_name(user_uuid: str, user_name: str) -> None:
+    with get_db_connection() as conn:
+        c = conn.cursor()
+        c.execute("""
+            INSERT INTO users (uuid, name) 
+            VALUES (?, ?) 
+            ON CONFLICT(uuid) DO UPDATE SET name = ?
+        """, (user_uuid, user_name, user_name))
+        conn.commit()
+
+def get_uuid_user_matching() -> dict[str, str]:
+    with get_db_connection() as conn:
+        c = conn.cursor()
+        c.execute("SELECT uuid, name FROM users")
+        users = c.fetchall()
+    return {u[0]: u[1] for u in users}

@@ -15,14 +15,20 @@
 <body>
     <div class="container">
         {% if logged_in %}
+            <a href="/" class="button homepage">Startseite</a>
             <a href="/admin" class="button admin">Admin</a>
             <a href="/logout" class="button logout">Logout</a>
         {% endif %}
         <h1>{% block header %}Team Health{% endblock %}</h1>
         {% block content %}{% endblock %}
-        {% if user %}
-            <p class="user">User ID: {{ user }}</p>
-        {% endif %}
+        <p class="user">
+            {% if user %}
+                User ID: {{ user }}
+            {% endif %}
+            {% if user_name %}
+                | Name: {{ user_name }}
+            {% endif %}
+        </p>
     </div>
     {% block scripts %}{% endblock %}
 </body>

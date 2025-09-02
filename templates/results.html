@@ -16,6 +16,10 @@
     {% endif %}
 </div>
 {% if questions and weighted_answers %}
+<h3>Retro-Score</h3>
+<div class="score average-box">
+    {{ score }}
+</div><span>{{ score_count }} abgegebene Stimme(n)</span>
 <table class="results">
     <tbody>
         {% for question in questions %}
@@ -58,16 +62,22 @@
                     <p>Deine Bewertung: {{ answers[question.id][user] }}</p>
                 {% endif %}
                 <p>Gesamtdurchschnitt: {{ overall_averages[question.id] }}</p>
+                <hr />
+                <h3>Einzelabstimmungen</h3>
+                <ul>
+                    {% for user, value in answers[question.id].items() %}
+                        {% if user in users %}
+                            <li>{{ users[user] }}: {{ value }}</li>
+                        {% else %}
+                            <li>{{ user }}: {{ value }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-<br /><br />
-<h3>Retro-Score</h3>
-<div class="score average-box">
-    {{ score }}
-</div>
 {% else %}
 <p>Keine Ergebnisse gefunden.</p>
 {% endif %}

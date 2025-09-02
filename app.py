@@ -65,7 +65,8 @@ def index():
         selfcare=selfcare, 
         surveys=surveys, 
         participant_counts=participant_counts, 
-        user=user, 
+        user=user,
+        user_name=model.get_user_by_uuid(user),
         logged_in=session.get("logged_in")
     )
 
@@ -94,6 +95,7 @@ def survey():
                 survey_name=survey["name"], 
                 survey_uuid=survey_uuid, 
                 user=user, 
+                user_name=model.get_user_by_uuid(user),
                 logged_in=session.get("logged_in")
             )
     return "Survey not found", 404
@@ -156,9 +158,12 @@ def results():
                 overall_averages=model.get_overall_question_averages(),
                 last_averages=model.get_last_averages(survey_uuid, question_ids),
                 survey_uuid=survey_uuid,
-                score=model.get_scores_by_survey(survey_uuid),
+                score=model.get_score_by_survey(survey_uuid),
+                score_count=model.get_score_count_by_survey(survey_uuid),
                 private=private if private else False,
                 user=user,
+                user_name=model.get_user_by_uuid(user),
+                users=model.get_uuid_user_matching(),
                 logged_in=session.get("logged_in")
             )
     return "Survey not found", 404
@@ -184,7 +189,7 @@ def admin():
     user = request.cookies.get("user")
     if not user:
         return redirect(url_for("index"))
-    return render_template("admin.html", user=user, logged_in=session.get("logged_in"))
+    return render_template("admin.html", user=user, user_name=model.get_user_by_uuid(user), logged_in=session.get("logged_in"))
 
 @app.route("/download_db")
 @login_required
@@ -204,6 +209,25 @@ def upload_db():
             file.save(model.DATABASE_FILE)
             return redirect(url_for("admin"))
     return redirect(url_for("admin"))
+
+@app.route("/set_name", methods=["POST"])
+@login_required
+def set_name():
+    user_name = request.form.get("user_name")
+    user_uuid = request.cookies.get("user")
+    print(f"Setting name for user {user_uuid} to {user_name}")
+    if user_name and user_uuid:
+        model.update_user_name(user_uuid, user_name)
+    return redirect(url_for("admin"))
+
+@app.route("/set_user_id", methods=["POST"])
+@login_required
+def set_user_id():
+    user_id = request.form.get("user")
+    resp = make_response(redirect(url_for("admin")))
+    expires_date = datetime.datetime.now() + datetime.timedelta(days=365)
+    resp.set_cookie("user", user_id, expires=expires_date)
+    return resp
 
 @app.route("/rate_survey", methods=["GET"])
 def rate_survey():
