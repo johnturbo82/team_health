@@ -8,11 +8,11 @@
 {% if not closed %}
 <p>Die Umfrage ist noch nicht abgeschlossen. Ergebnisse stehen erst nach Abschluss zur Verfügung.</p>
 {% else %}
-<div class="toggle-private">
-    {% if private %}
-        <a href="?{% for key, value in request.args.items() %}{% if key != 'private' %}{{ key }}={{ value }}{% endif %}{% endfor %}">Private Ansicht deaktivieren</a>
+<div class="toggle-public">
+    {% if public %}
+        <a href="?{% for key, value in request.args.items() %}{% if key != 'public' %}{{ key }}={{ value }}{% endif %}{% endfor %}">Zur privaten Ansicht wechseln</a>
     {% else %}
-        <a href="?{% for key, value in request.args.items() %}{{ key }}={{ value }}&{% endfor %}private=1">Private Ansicht aktivieren</a>
+        <a href="?{% for key, value in request.args.items() %}{{ key }}={{ value }}&{% endfor %}public=1">Zur öffentlichen Ansicht wechseln</a>
     {% endif %}
 </div>
 {% if questions and weighted_answers %}
@@ -35,7 +35,7 @@
                         x-axis "Wertung"
                         y-axis "Anzahl"
                         bar[{% for i in range(10) %}{{ weighted_answers[question.id][i] }}{% if not loop.last %},{% endif %}{% endfor %}]
-                        {% if question.id in answers and user in answers[question.id] and not private %}
+                        {% if question.id in answers and user in answers[question.id] and not public %}
                             line[{% set line_values = [0] * 10 %}{% set user_value = answers[question.id][user] %}{% set line_values = line_values[:user_value-1] + [1] + line_values[user_value:] %}{{ line_values | join(',') }}]
                         {% endif %}
                 </div>
@@ -58,7 +58,7 @@
                 </div>
                 <p>Durchschnitt: {{ average_answers[question.id] }}</p>
                 <p>Durchschnitt letzte Umfrage: {{ last_averages[question.id | string] }}</p>
-                {% if question.id in answers and user in answers[question.id] and not private %}
+                {% if question.id in answers and user in answers[question.id] and not public %}
                     <p>Deine Bewertung: {{ answers[question.id][user] }}</p>
                 {% endif %}
                 <p>Gesamtdurchschnitt: {{ overall_averages[question.id] }}</p>

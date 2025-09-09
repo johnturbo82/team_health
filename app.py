@@ -141,7 +141,7 @@ def results():
         return redirect(url_for("index"))
     
     survey_uuid = request.args.get("uuid")
-    private = request.args.get("private")
+    public = request.args.get("public")
     if survey_uuid:
         survey = model.get_survey_by_uuid(survey_uuid)
         if survey:
@@ -160,7 +160,7 @@ def results():
                 survey_uuid=survey_uuid,
                 score=model.get_score_by_survey(survey_uuid),
                 score_count=model.get_score_count_by_survey(survey_uuid),
-                private=private if private else False,
+                public=public if public else False,
                 user=user,
                 user_name=model.get_user_by_uuid(user),
                 users=model.get_uuid_user_matching(),
