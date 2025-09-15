@@ -1,11 +1,17 @@
 from flask import Flask, render_template, redirect, request, send_file, url_for, make_response, session
-import model
+from . import model
 import uuid
 import datetime
 import yaml
+import os
 
-app = Flask(__name__)
-with open("config.yaml", "r") as file:
+# Ermittle den Pfad zur config.yaml dynamisch
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(current_dir)
+config_path = os.path.join(project_root, "config.yaml")
+
+app = Flask(__name__, template_folder='../templates', static_folder='../static')
+with open(config_path, "r") as file:
     config = yaml.safe_load(file)
 app.secret_key = config["secret_key"]
 

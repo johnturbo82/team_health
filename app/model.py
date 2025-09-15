@@ -1,7 +1,10 @@
 import sqlite3
 from contextlib import contextmanager
+import os
 
-DATABASE_FILE = "database.db"
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(current_dir)
+DATABASE_FILE = os.path.join(project_root, "database.db")
 
 @contextmanager
 def get_db_connection():
