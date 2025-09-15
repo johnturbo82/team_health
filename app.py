@@ -9,6 +9,8 @@ with open("config.yaml", "r") as file:
     config = yaml.safe_load(file)
 app.secret_key = config["secret_key"]
 
+model.init_db()
+
 USERNAME = config["username"]
 PASSWORD = config["password"]
 
