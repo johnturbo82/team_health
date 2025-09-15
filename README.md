@@ -3,7 +3,7 @@
 ## Installation
 
 1. Clone the repository or download the files.
-2. Copy `config.yaml.example` to `config.yaml` and set your own credetials.
+2. Copy `config.yaml.example` to `config.yaml` and set your own credentials.
 3. Make sure Python and pip are installed.
 4. Install the required dependencies with the following command:
 
@@ -25,7 +25,7 @@ Then open your web browser and go to `http://127.0.0.1:5000` to use the applicat
 
 To deploy the application using Docker, follow these steps:
 
-1. Copy `config.yaml.example` to `config.yaml` and set your own credetials.
+1. Copy `config.yaml.example` to `config.yaml` and set your own credentials.
 2. `docker compose up -d` to build container and start the application.
 3. **Access the application**:
    Open your web browser and go to `http://localhost:8000` to access the application.
